@@ -1,0 +1,28 @@
+# Node.js (si estás usando GraphQL con Node.js)
+node_modules/
+
+# Archivos de dependencias generadas por npm o yarn
+npm-debug.log
+yarn-error.log
+
+# Archivos de compilación de GraphQL (si estás generando un esquema)
+dist/
+build/
+
+# Archivos temporales y de configuración de editores
+.vscode/
+.idea/
+
+# Archivos de bases de datos locales (si usas algo como SQLite)
+*.sqlite
+*.db
+
+# Archivos GraphQL generados (si es necesario)
+*.graphql
+*.gql
+
+# Archivos de caché (por ejemplo, para Apollo)
+.apollo/
+
+# Dependiendo de tu entorno, puedes querer ignorar logs
+*.log
