@@ -17,7 +17,7 @@ const pokemonResolver: IResolvers = {
                 const reg_ex = new RegExp(args?.pokemon?.name, 'i');
                 const pokemonColl = await context.collection('pokemons').findOne({ name: reg_ex });
                 console.log(pokemonColl);
-                if (pokemonColl) throw new Error("Employee already exists");
+                if (pokemonColl) throw new Error("Pokemon already registered");
 
                 await context.collection('pokemons').insertOne(args.pokemon);
                 return "Pokemon entry created successfully";

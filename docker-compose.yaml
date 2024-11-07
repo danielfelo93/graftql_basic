@@ -1,7 +1,7 @@
 services:
   app:
     build:
-        context: ./be_grahpql
+        context: ./be_graphql
         dockerfile: .Dockerfile
     ports:
         - 37211:4000
