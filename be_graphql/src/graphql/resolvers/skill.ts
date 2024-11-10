@@ -14,10 +14,19 @@ const skillResolver: IResolvers = {
     Mutation: {
         createSkill: async (parent, args, context: Db) => {
             try {
-              await context.collection('Skills').insertOne(args.skill);
-              return "Skill created successfully";
+                const reg_ex = new RegExp(args?.skill?.name, 'i');
+                const skillColl = await context.collection('skills').findOne({ name: reg_ex });
+        
+                if (skillColl) {
+                    return "Skill already registered";  // Cambiar el lanzamiento de la excepción por un mensaje
+                }
+        
+                await context.collection('skills').insertOne(args.skill);
+                return "Skill entry created successfully";
             } catch (error) {
-              console.log(error);
+                console.log(error);
+                // En caso de error, retornar un mensaje que indique que hubo un problema
+                return "Error creating skill";  
             }
         },
         updateSkill: async (parent, args, context: Db) => {

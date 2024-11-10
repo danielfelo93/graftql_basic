@@ -39,10 +39,19 @@ const userResolver: IResolvers = {
     Mutation: {
         createUser: async (parent, args, context: Db) => {
             try {
-                await context.collection('users').insertOne(args.userInput);
-                return "User created successfully";
+                const reg_ex = new RegExp(args?.userInput?.email, 'i');
+                const userColl = await context.collection('users').findOne({ email: reg_ex });
+        
+                if (userColl) {
+                    return "User already registered";  // Cambiar el lanzamiento de la excepción por un mensaje
+                }
+        
+                await context.collection('users').insertOne(args.user);
+                return "User entry created successfully";
             } catch (error) {
                 console.log(error);
+                // En caso de error, retornar un mensaje que indique que hubo un problema
+                return "Error creating user";  
             }
         },
         updateUser: async (parent, args, context: Db) => {

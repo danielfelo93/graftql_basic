@@ -26,5 +26,5 @@ services:
       context: ./fe_test
       dockerfile: .Dockerfile
     ports:
-      - 37212:80
+      - 37113:80
     container_name: frontend_react

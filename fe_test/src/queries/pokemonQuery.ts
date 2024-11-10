@@ -1,11 +1,12 @@
 //import { gql, DocumentNode } from "apollo-boost";
 import { gql, DocumentNode } from "@apollo/client";
 
-export const GET_POKEMON: DocumentNode = gql`
+export const GET_POKEMONS: DocumentNode = gql`
 {
-  getpokemons{
+  getPokemons{
     _id,
-     name
+     name,
+     type
   }
 }
 `;

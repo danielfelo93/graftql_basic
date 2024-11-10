@@ -10,7 +10,9 @@ export default class MongoLib {
     private dbName: any= config.dbName;
     private mongoUri: any= config.mongoUrl;
     private static connection: Db
-
+    /**
+     *
+     */
     
     constructor() {
         this.client = new MongoClient(this.mongoUri, options)
