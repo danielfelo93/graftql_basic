@@ -8,6 +8,7 @@ const pokemonResolver: IResolvers = {
                 return await context.collection('pokemons').find().toArray() ?? [];
             } catch (error) {
                 console.log(error);
+                return [];
             }
         }
     },
@@ -47,13 +48,19 @@ const pokemonResolver: IResolvers = {
     Pokemon: {
         async skills(parent, args, context: Db) {
             try {
-                const skillsList = parent.skills.map(async (id: String) => {
-                    return await context.collection('Skills').findOne({ _id: new ObjectId(id.toString()) });
-                });
-                return skillsList;
-
+                const skillsList = await Promise.all(
+                    parent.skills.map(async (id: string) => {
+                        if (ObjectId.isValid(id)) {  // Verifica si el ID es válido
+                            return await context.collection('Skills').findOne({ _id: new ObjectId(id) });
+                        }
+                        console.warn(`Skill ID inválido encontrado: ${id}`);
+                        return null;
+                    })
+                );
+                return skillsList.filter(skill => skill !== null);  // Filtra habilidades nulas
             } catch (error) {
                 console.log(error);
+                return [];
             }
         }
     }

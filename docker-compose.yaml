@@ -2,7 +2,7 @@ services:
   app:
     build:
         context: ./be_graphql
-        dockerfile: .Dockerfile
+        dockerfile: Dockerfile
     ports:
         - 37211:4000
     container_name: app_backend_graphql
@@ -16,7 +16,7 @@ services:
   mongodb:
     image: mongo:latest
     ports:
-      - 27018:27017
+      - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=secret
@@ -24,7 +24,7 @@ services:
   fe_test:
     build:
       context: ./fe_test
-      dockerfile: .Dockerfile
+      dockerfile: Dockerfile
     ports:
       - 37113:80
     container_name: frontend_react

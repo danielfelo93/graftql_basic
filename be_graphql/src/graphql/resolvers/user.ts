@@ -46,12 +46,10 @@ const userResolver: IResolvers = {
                     return "User already registered";  // Cambiar el lanzamiento de la excepción por un mensaje
                 }
         
-                await context.collection('users').insertOne(args.user);
+                await context.collection('users').insertOne(args.userInput);
                 return "User entry created successfully";
             } catch (error) {
-                console.log(error);
-                // En caso de error, retornar un mensaje que indique que hubo un problema
-                return "Error creating user";  
+                console.log(error);   
             }
         },
         updateUser: async (parent, args, context: Db) => {
