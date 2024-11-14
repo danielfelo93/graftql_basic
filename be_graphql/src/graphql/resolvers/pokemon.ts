@@ -29,38 +29,66 @@ const pokemonResolver: IResolvers = {
         },
         updatePokemon: async (parent, args, context: Db) => {
             try {
-                const { input } = args;
-                const pokemonColl = await context.collection('pokemons').findOne({ _id: new ObjectId(args._id) });
-                if (!pokemonColl) throw new Error("Pokemon not found");
-
-                await context.collection('pokemons').updateOne(
-                    { _id: new ObjectId(args._id) },
-                    { $set: args.pokemon }
+                const { _id, pokemon } = args;
+                
+                // Verifica que el ID del Pokémon sea válido
+                if (!ObjectId.isValid(_id)) {
+                    throw new Error("Invalid Pokémon ID");
+                }
+        
+                const result = await context.collection('pokemons').updateOne(
+                    { _id: new ObjectId(_id) },
+                    { $set: pokemon }
                 );
-
-                return "Pokemon updated successfully";
+        
+                if (result.matchedCount === 0) {
+                    throw new Error("Pokémon not found");
+                }
+        
+                return "Pokémon updated successfully";
             } catch (error) {
                 console.log(error);
+                return "Error updating Pokémon";
             }
         },
+        deletePokemon: async (parent, args, context: Db) => {
+            try {
+                const { _id } = args;
+        
+                // Verifica que el ID del Pokémon sea válido
+                if (!ObjectId.isValid(_id)) {
+                    throw new Error("Invalid Pokémon ID");
+                }
+        
+                const result = await context.collection('pokemons').deleteOne({ _id: new ObjectId(_id) });
+        
+                if (result.deletedCount === 0) {
+                    throw new Error("Pokémon not found");
+                }
+        
+                return "Pokémon deleted successfully";
+            } catch (error) {
+                console.log(error);
+                return "Error deleting Pokémon";
+            }
+        }
 
     },
     Pokemon: {
         async skills(parent, args, context: Db) {
             try {
-                const skillsList = await Promise.all(
-                    parent.skills.map(async (id: string) => {
-                        if (ObjectId.isValid(id)) {  // Verifica si el ID es válido
-                            return await context.collection('Skills').findOne({ _id: new ObjectId(id) });
-                        }
-                        console.warn(`Skill ID inválido encontrado: ${id}`);
-                        return null;
-                    })
-                );
-                return skillsList.filter(skill => skill !== null);  // Filtra habilidades nulas
+                // Filtra y convierte solo los IDs válidos a ObjectId antes de hacer la búsqueda
+                const validSkillsIds = parent.skills
+                    .filter((id: string) => ObjectId.isValid(id))
+                    .map((id: string) => new ObjectId(id));
+    
+                // Usa $in para buscar múltiples ObjectIds en una sola operación de base de datos
+                return await context.collection('skills')
+                    .find({ _id: { $in: validSkillsIds } })
+                    .toArray();
             } catch (error) {
                 console.log(error);
-                return [];
+                throw new Error("Error retrieving skills");
             }
         }
     }
